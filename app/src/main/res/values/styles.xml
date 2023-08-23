@@ -1,0 +1,37 @@
+<resources>
+
+    <style name="LightTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="icon_list">@drawable/ic_list</item>
+        <item name="icon_expand_more">@drawable/ic_expand_more</item>
+        <item name="icon_expand_less">@drawable/ic_expand_less</item>
+        <item name="icon_statelist">@drawable/expandable_statelist</item>
+        <item name="icon_info">@drawable/ic_info</item>
+        <item name="icon_donate">@drawable/ic_donate</item>
+        <item name="icon_radio">@drawable/ic_radio</item>
+        <item name="icon_rec">@drawable/ic_rec</item>
+        <item name="icon_settings">@drawable/ic_settings</item>
+    </style>
+
+    <style name="LightTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
+    </style>
+
+    <style name="DarkTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="icon_list">@drawable/ic_list_white</item>
+        <item name="icon_expand_more">@drawable/ic_expand_more_white</item>
+        <item name="icon_expand_less">@drawable/ic_expand_less_white</item>
+        <item name="icon_statelist">@drawable/expandable_statelist_white</item>
+        <item name="icon_info">@drawable/ic_info_white</item>
+        <item name="icon_donate">@drawable/ic_donate_white</item>
+        <item name="icon_radio">@drawable/ic_radio_white</item>
+        <item name="icon_rec">@drawable/ic_rec_white</item>
+        <item name="icon_settings">@drawable/ic_settings_white</item>
+    </style>
+
+    <style name="DarkTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark">
+    </style>
+
+</resources>

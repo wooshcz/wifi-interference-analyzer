@@ -1,0 +1,62 @@
+apply plugin: 'com.android.application'
+
+android {
+    signingConfigs {
+        release {
+            def props = new Properties()
+            def fileInputStream = new FileInputStream(file('../local.properties'))
+            props.load(fileInputStream)
+            fileInputStream.close()
+            storeFile = file(props['storeFilePath'])
+            storePassword = props['storePassword']
+            keyAlias = props['keyAlias']
+            keyPassword = props['keyPassword']
+        }
+    }
+    compileSdk 33
+    buildToolsVersion '34.0.0'
+    defaultConfig {
+        applicationId "com.woosh.wirelesscoverage"
+        minSdkVersion 19
+        targetSdkVersion 33
+        versionCode 27
+        versionName "1.7.3"
+        signingConfig signingConfigs.release
+        buildConfigField("long", "VERSION_CODE", "${defaultConfig.versionCode}")
+        buildConfigField("String", "VERSION_NAME", "\"${defaultConfig.versionName}\"")
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix '.debug'
+        }
+    }
+    productFlavors {
+    }
+    namespace 'com.woosh.wirelesscoverage'
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    buildFeatures {
+        aidl true
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    testImplementation 'junit:junit:4.13.2'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.drawerlayout:drawerlayout:1.2.0'
+
+    def billing_version = "5.1.0"
+    implementation "com.android.billingclient:billing:$billing_version"
+}

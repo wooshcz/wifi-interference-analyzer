@@ -1,0 +1,10 @@
+<resources>
+    <dimen name="nav_header_height">100dp</dimen>
+    <dimen name="padding_navheader_logo">10dp</dimen>
+    <dimen name="margin_navheader_logo">12dp</dimen>
+    <dimen name="margin_rec_bestchan">8dp</dimen>
+    <dimen name="margin_group_title">26dp</dimen>
+    <dimen name="spectrum_textsize">12sp</dimen>
+    <dimen name="spectrum_axisgap">40dp</dimen>
+    <dimen name="spectrum_labelsize">16sp</dimen>
+</resources>

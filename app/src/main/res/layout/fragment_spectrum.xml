@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coord"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.woosh.wirelesscoverage.MainActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include android:id="@+id/submenu" layout="@layout/submenu_reload_band" />
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
+            android:layout_below="@+id/submenu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.woosh.wirelesscoverage.SpectrumView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/custom_view"
+                app:barsColor="?android:attr/textColorPrimary"
+                app:gridColor="?android:attr/textColorSecondary"
+                app:textColor="?android:attr/textColorPrimary"/>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    </RelativeLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+

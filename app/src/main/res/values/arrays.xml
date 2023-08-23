@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="theme_entries">
+        <item>@string/theme_entries_1</item>
+        <item>@string/theme_entries_2</item>
+    </string-array>
+    <string-array name="theme_values" translatable="false">
+        <item>light</item>
+        <item>dark</item>
+    </string-array>
+    <string-array name="delay_entries">
+        <item>@string/delay_entries_1</item>
+        <item>@string/delay_entries_2</item>
+        <item>@string/delay_entries_3</item>
+        <item>@string/delay_entries_4</item>
+        <item>@string/delay_entries_5</item>
+    </string-array>
+    <string-array name="delay_values" translatable="false">
+        <item>-1</item>
+        <item>2</item>
+        <item>5</item>
+        <item>10</item>
+        <item>60</item>
+    </string-array>
+    <string-array name="band_entries">
+        <item>@string/band_entries_1</item>
+        <item>@string/band_entries_2</item>
+    </string-array>
+    <string-array name="band_values" translatable="false">
+        <item>24</item>
+        <item>5</item>
+    </string-array>
+    <string-array name="freqchan_entries">
+        <item>@string/freqchan_entries_1</item>
+        <item>@string/freqchan_entries_2</item>
+        <item>@string/freqchan_entries_3</item>
+    </string-array>
+    <string-array name="freqchan_values" translatable="false">
+        <item>Chan</item>
+        <item>MHz</item>
+        <item>GHz</item>
+    </string-array>
+    <string-array name="channels_2G" translatable="false">
+        <item>11</item>
+        <item>13</item>
+        <item>14</item>
+    </string-array>
+    <string-array name="channels_5G" translatable="false">
+        <item>48</item>
+        <item>64</item>
+    </string-array>
+    <string-array name="dialog_options">
+        <item>@string/dialog_options_1</item>
+        <item>@string/dialog_options_2</item>
+    </string-array>
+
+    <plurals name="frag_rec_best">
+        <item quantity="zero">@string/frag_rec_best_zero</item>
+        <item quantity="one">@string/frag_rec_best_one</item>
+        <item quantity="few">@string/frag_rec_best_few</item>
+        <item quantity="other">@string/frag_rec_best_other</item>
+    </plurals>
+
+</resources>

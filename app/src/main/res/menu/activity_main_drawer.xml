@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.woosh.wirelesscoverage.MainActivity">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_scan"
+            android:icon="?attr/icon_list"
+            android:title="@string/nav_scan" />
+        <item
+            android:id="@+id/nav_spectrum"
+            android:icon="?attr/icon_radio"
+            android:title="@string/nav_spectrum" />
+        <item
+            android:id="@+id/nav_recording"
+            android:icon="?attr/icon_rec"
+            android:title="@string/nav_recording" />
+
+    </group>
+
+    <item android:title="@string/nav_others">
+
+        <menu>
+            <item
+                android:id="@+id/nav_about"
+                android:icon="?attr/icon_info"
+                android:title="@string/nav_about" />
+            <item
+                android:id="@+id/nav_donate"
+                android:icon="?attr/icon_donate"
+                android:title="@string/nav_donate" />
+        </menu>
+
+    </item>
+
+</menu>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.woosh.wirelesscoverage.MainActivity"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:baselineAligned="false">
+
+    <LinearLayout
+        android:id="@+id/flag"
+        android:layout_width="4dp"
+        android:layout_height="match_parent"
+        android:orientation="horizontal" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="6dp">
+
+        <TextView
+            android:id="@+id/ap_bssid"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:text="@string/frag_scan_bssid"
+            android:layout_weight="0.9" />
+
+        <TextView
+            android:id="@+id/ap_frequency"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:singleLine="true"
+            android:text="@string/frag_scan_chanfr"
+            android:layout_weight="1.5" />
+
+        <TextView
+            android:id="@+id/ap_level"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:textSize="12sp"
+            android:text="@string/frag_scan_strength"
+            android:layout_weight="0.6" />
+
+        <TextView
+            android:id="@+id/ap_capab"
+            android:layout_gravity="end"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:textSize="12sp"
+            android:singleLine="true"
+            android:text="@string/frag_scan_apcapab"
+            android:layout_weight="1.4" />
+
+    </LinearLayout>
+
+</LinearLayout>

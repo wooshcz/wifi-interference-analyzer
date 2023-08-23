@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="start|center_vertical"
+    style="?android:attr/buttonBarStyle"
+    tools:context="com.woosh.wirelesscoverage.MainActivity">
+
+    <ToggleButton
+        style="?android:attr/buttonStyleToggle"
+        android:textOn="@string/butt_autoreload"
+        android:textOff="@string/butt_autoreload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/butt_autoreload" />
+
+    <ToggleButton
+        style="?android:attr/buttonStyleToggle"
+        android:textOn="@string/butt_autofilter"
+        android:textOff="@string/butt_autofilter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/butt_autofilter" />
+
+    <ToggleButton
+        style="?android:attr/buttonStyleToggle"
+        android:textOn="@string/butt_record"
+        android:textOff="@string/butt_record"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/butt_rec" />
+
+    <Button
+        style="?android:attr/buttonStyle"
+        android:text="@string/butt_clear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/butt_clr" />
+
+</LinearLayout>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="icon_list" format="reference" />
+    <attr name="icon_expand_more" format="reference" />
+    <attr name="icon_expand_less" format="reference" />
+    <attr name="icon_statelist" format="reference" />
+    <attr name="icon_info" format="reference" />
+    <attr name="icon_donate" format="reference" />
+    <attr name="icon_radio" format="reference" />
+    <attr name="icon_rec" format="reference" />
+    <attr name="icon_settings" format="reference" />
+
+    <declare-styleable name="SpectrumView">
+        <attr name="textColor" format="reference|color" />
+        <attr name="gridColor" format="reference|color" />
+        <attr name="barsColor" format="reference|color" />
+    </declare-styleable>
+
+</resources>
