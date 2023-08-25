@@ -19,7 +19,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (!Constants.PREFS.get(Constants.PREF_THEME).equals(getString(R.string.pref_theme_def)))
+        if (!getString(R.string.pref_theme_def).equals(Constants.PREFS.get(Constants.PREF_THEME)))
             setTheme(R.style.DarkTheme);
         else setTheme(R.style.LightTheme);
         super.onCreate(savedInstanceState);
