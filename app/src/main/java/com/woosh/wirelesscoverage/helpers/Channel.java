@@ -1,14 +1,13 @@
 package com.woosh.wirelesscoverage.helpers;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 
 public class Channel {
 
     final int channelId, channelFrequency;
+    final ArrayList<String> accessPointList = new ArrayList<>();
     int accesPointCount;
     float score, rating;
-    final ArrayList<String> accessPointList = new ArrayList<>();
 
     public Channel(int id, int freq) {
         this.channelId = id;
@@ -51,12 +50,4 @@ public class Channel {
         return accessPointList;
     }
 
-    private static Comparator<Channel> compByScore() {
-        return new Comparator<Channel>() {
-            @Override
-            public int compare(Channel c1, Channel c2) {
-                return Math.round(c1.score - c2.score);
-            }
-        };
-    }
 }

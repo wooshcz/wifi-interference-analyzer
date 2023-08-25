@@ -8,9 +8,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.wifi.WifiManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +29,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.preference.PreferenceManager;
 
 import com.android.billingclient.api.AcknowledgePurchaseParams;
 import com.android.billingclient.api.AcknowledgePurchaseResponseListener;
@@ -62,9 +61,6 @@ import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private SharedPreferences sp;
-    private BillingClient billingClient;
-    private ProductDetails productDetails;
     public static Scanner sw;
     public static WifiManager wm;
     public static boolean RELOAD_RUNNING = false;
@@ -74,37 +70,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static long DELAY;
     private static long DELAY_REC;
     private static Timer timer;
-
-    private NavigationView navigationView;
-
     private final AcknowledgePurchaseResponseListener acknowledgePurchaseResponseListener = billingResult -> WifiUtils.addToDebugLog("billingFlow onAcknowledgePurchaseResponse: " + billingResult);
-
-    private final PurchasesUpdatedListener purchasesUpdatedListener = new PurchasesUpdatedListener() {
-        @Override
-        public void onPurchasesUpdated(BillingResult billingResult, List<Purchase> purchases) {
-            if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && purchases != null) {
-                WifiUtils.addToDebugLog("billingFlow onPurchasesUpdated: BillingClient.BillingResponseCode.OK");
-                for (Purchase purchase : purchases) {
-                    if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
-                        Toast.makeText(getApplicationContext(), R.string.feedback_donation_success, Toast.LENGTH_LONG).show();
-                        if (!purchase.isAcknowledged()) {
-                            AcknowledgePurchaseParams acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder()
-                                    .setPurchaseToken(purchase.getPurchaseToken())
-                                    .build();
-                            billingClient.acknowledgePurchase(acknowledgePurchaseParams, acknowledgePurchaseResponseListener);
-                        }
-                        View donateButton = findViewById(R.id.nav_donate);
-                        donateButton.setVisibility(View.INVISIBLE);
-                    }
-                }
-            } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) {
-                Toast.makeText(getApplicationContext(), R.string.feedback_donation_cancelled, Toast.LENGTH_LONG).show();
-            } else {
-                WifiUtils.addToDebugLog("billingFlow onPurchasesUpdated: BillingResponseCode is not OK or list of Purchases is null");
-            }
-        }
-    };
-
     private final SharedPreferences.OnSharedPreferenceChangeListener spChanged = (sharedPreferences, key) -> {
         Map<String, ?> all = sharedPreferences.getAll();
         String val = all.get(key).toString();
@@ -114,7 +80,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         WifiUtils.addToDebugLog("pref changed: " + key);
         WifiUtils.addToDebugLog("pref changed: " + Constants.PREFS.get(key));
     };
-
     private final BroadcastReceiver scanReady = new BroadcastReceiver() {
         @Override
         public void onReceive(Context c, Intent intent) {
@@ -140,6 +105,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
     };
+    private SharedPreferences sp;
+    private BillingClient billingClient;
+    private final PurchasesUpdatedListener purchasesUpdatedListener = new PurchasesUpdatedListener() {
+        @Override
+        public void onPurchasesUpdated(BillingResult billingResult, List<Purchase> purchases) {
+            if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && purchases != null) {
+                WifiUtils.addToDebugLog("billingFlow onPurchasesUpdated: BillingClient.BillingResponseCode.OK");
+                for (Purchase purchase : purchases) {
+                    if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
+                        Toast.makeText(getApplicationContext(), R.string.feedback_donation_success, Toast.LENGTH_LONG).show();
+                        if (!purchase.isAcknowledged()) {
+                            AcknowledgePurchaseParams acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder()
+                                    .setPurchaseToken(purchase.getPurchaseToken())
+                                    .build();
+                            billingClient.acknowledgePurchase(acknowledgePurchaseParams, acknowledgePurchaseResponseListener);
+                        }
+                        View donateButton = findViewById(R.id.nav_donate);
+                        donateButton.setVisibility(View.INVISIBLE);
+                    }
+                }
+            } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) {
+                Toast.makeText(getApplicationContext(), R.string.feedback_donation_cancelled, Toast.LENGTH_LONG).show();
+            } else {
+                WifiUtils.addToDebugLog("billingFlow onPurchasesUpdated: BillingResponseCode is not OK or list of Purchases is null");
+            }
+        }
+    };
+    private ProductDetails productDetails;
+    private NavigationView navigationView;
 
     public static void runOneTimeScan() {
         if (null != wm && wm.isWifiEnabled()) {
@@ -306,21 +300,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    || checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    || checkSelfPermission(Manifest.permission.CHANGE_WIFI_STATE) != PackageManager.PERMISSION_GRANTED
-                    || checkSelfPermission(Manifest.permission.ACCESS_WIFI_STATE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.CHANGE_WIFI_STATE,
-                        Manifest.permission.ACCESS_WIFI_STATE
-                }, 0x1000);
-            } else {
-                registerReceiver(scanReady, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-                receiverRegistered = true;
-            }
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                || checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                || checkSelfPermission(Manifest.permission.CHANGE_WIFI_STATE) != PackageManager.PERMISSION_GRANTED
+                || checkSelfPermission(Manifest.permission.ACCESS_WIFI_STATE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.CHANGE_WIFI_STATE,
+                    Manifest.permission.ACCESS_WIFI_STATE
+            }, 0x1000);
         } else {
             registerReceiver(scanReady, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
             receiverRegistered = true;

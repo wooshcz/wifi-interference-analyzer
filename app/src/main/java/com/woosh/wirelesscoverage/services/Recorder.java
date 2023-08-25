@@ -43,7 +43,7 @@ public class Recorder {
     private final int minchan;
 
     public Recorder() {
-        this.band = Constants.PREFS.get(Constants.PREF_BAND);
+        this.band = Constants.PREFS.getOrDefault(Constants.PREF_BAND, Constants.BAND_2GHZ);
         int chanstep;
         if (band.equals(Constants.BAND_5GHZ)) {
             this.maxchan = Integer.parseInt(Constants.PREFS.get(Constants.PREF_MAX_CHANNEL_5G));

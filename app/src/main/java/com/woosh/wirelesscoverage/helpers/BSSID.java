@@ -15,7 +15,7 @@ public class BSSID {
     int band;
     int level;
 
-    public BSSID (String bssid) {
+    public BSSID(String bssid) {
         this.BSSID = bssid;
         this.seenAt = System.currentTimeMillis();
     }

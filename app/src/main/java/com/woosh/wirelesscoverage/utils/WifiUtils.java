@@ -1,10 +1,7 @@
 package com.woosh.wirelesscoverage.utils;
 
 import android.net.wifi.ScanResult;
-import android.os.Build;
 import android.util.Log;
-
-import com.woosh.wirelesscoverage.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,61 +29,54 @@ public class WifiUtils {
     public static int ieee80211_frequency_to_channel(int freq) {
         if (freq == 2484) return 14;
         if (freq < 2484) return (freq - 2407) / 5;
-        return freq/5 - 1000;
+        return freq / 5 - 1000;
     }
 
     public static int ieee80211_channel_to_frequency(int ch) {
         if (ch == 14) return 2484;
-        if (ch < 14) return (ch*5)+2407;
-        return 5*(ch + 1000);
+        if (ch < 14) return (ch * 5) + 2407;
+        return 5 * (ch + 1000);
     }
 
     public static int[] chanFreqWidth(ScanResult result) {
         int[] ret = new int[4]; // fr0, fr1, bw0, bw1
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            switch (result.channelWidth) {
-                case ScanResult.CHANNEL_WIDTH_20MHZ:
-                    ret[0] = result.frequency;
-                    ret[1] = 0;
-                    ret[2] = 20;
-                    ret[3] = 0;
-                    break;
-                case ScanResult.CHANNEL_WIDTH_40MHZ:
-                    ret[0] = result.centerFreq0;
-                    ret[1] = 0;
-                    ret[2] = 40;
-                    ret[3] = 0;
-                    break;
-                case ScanResult.CHANNEL_WIDTH_80MHZ:
-                    ret[0] = result.centerFreq0;
-                    ret[1] = 0;
-                    ret[2] = 80;
-                    ret[3] = 0;
-                    break;
-                case ScanResult.CHANNEL_WIDTH_160MHZ:
-                    ret[0] = result.centerFreq0;
-                    ret[1] = 0;
-                    ret[2] = 160;
-                    ret[3] = 0;
-                    break;
-                case ScanResult.CHANNEL_WIDTH_320MHZ:
-                    ret[0] = result.centerFreq0;
-                    ret[1] = 0;
-                    ret[2] = 320;
-                    ret[3] = 0;
-                    break;
-                case ScanResult.CHANNEL_WIDTH_80MHZ_PLUS_MHZ:
-                    ret[0] = result.centerFreq0;
-                    ret[1] = result.centerFreq1;
-                    ret[2] = 80;
-                    ret[3] = 80;
-                    break;
-            }
-        } else {
-            ret[0] = result.frequency;
-            ret[1] = 0;
-            ret[2] = 20;
-            ret[3] = 0;
+        switch (result.channelWidth) {
+            case ScanResult.CHANNEL_WIDTH_20MHZ:
+                ret[0] = result.frequency;
+                ret[1] = 0;
+                ret[2] = 20;
+                ret[3] = 0;
+                break;
+            case ScanResult.CHANNEL_WIDTH_40MHZ:
+                ret[0] = result.centerFreq0;
+                ret[1] = 0;
+                ret[2] = 40;
+                ret[3] = 0;
+                break;
+            case ScanResult.CHANNEL_WIDTH_80MHZ:
+                ret[0] = result.centerFreq0;
+                ret[1] = 0;
+                ret[2] = 80;
+                ret[3] = 0;
+                break;
+            case ScanResult.CHANNEL_WIDTH_160MHZ:
+                ret[0] = result.centerFreq0;
+                ret[1] = 0;
+                ret[2] = 160;
+                ret[3] = 0;
+                break;
+            case ScanResult.CHANNEL_WIDTH_320MHZ:
+                ret[0] = result.centerFreq0;
+                ret[1] = 0;
+                ret[2] = 320;
+                ret[3] = 0;
+                break;
+            case ScanResult.CHANNEL_WIDTH_80MHZ_PLUS_MHZ:
+                ret[0] = result.centerFreq0;
+                ret[1] = result.centerFreq1;
+                ret[2] = 80;
+                ret[3] = 80;
+                break;
         }
         return ret;
     }
@@ -103,14 +93,14 @@ public class WifiUtils {
             int i = 0;
             while (m.find() && i < MAX) {
                 for (int j = 0; j < GRP; j++) {
-                    ret[i][j] = m.group(j+1);
+                    ret[i][j] = m.group(j + 1);
                 }
                 i++;
             }
         }
-        for (String[] aRet: ret) {
+        for (String[] aRet : ret) {
             StringBuilder txt = new StringBuilder();
-            for (int y = 0; y < aRet.length-1; y++) {
+            for (int y = 0; y < aRet.length - 1; y++) {
                 if (aRet[y] != null && aRet[y].length() > 0) {
                     if (y > 0) txt.append("-");
                     txt.append(aRet[y]);
