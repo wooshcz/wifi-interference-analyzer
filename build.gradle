@@ -27,7 +27,7 @@ allprojects {
     gradle.projectsEvaluated {
         tasks.withType(JavaCompile).tap {
             configureEach {
-                options.compilerArgs << "-Xlint:deprecation"
+                options.compilerArgs << "-Xmx2g -XX:MaxMetaspaceSize=512m"
             }
         }
     }
