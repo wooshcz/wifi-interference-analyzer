@@ -23,14 +23,6 @@ allprojects {
             name 'Google'
         }
     }
-
-    gradle.projectsEvaluated {
-        tasks.withType(JavaCompile).tap {
-            configureEach {
-                options.compilerArgs += ['-Xmx2g', '-XX:MaxMetaspaceSize=512m']
-            }
-        }
-    }
 }
 
 tasks.register('clean', Delete) {
