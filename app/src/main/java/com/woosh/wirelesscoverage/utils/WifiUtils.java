@@ -82,7 +82,6 @@ public class WifiUtils {
     }
 
     public static List<String> parseCapabilities(String cap) {
-        addToDebugLog("Parsing WiFi network capabilities: " + cap);
         List<String> out = new ArrayList<>();
         if (cap.contains("[") && cap.contains("]")) {
             String regex = "\\[([A-Z0-9-+/]+)]";
