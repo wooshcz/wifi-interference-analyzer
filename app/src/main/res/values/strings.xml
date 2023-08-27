@@ -93,8 +93,6 @@
     <string name="freqchan_entries_2" translatable="false">MHz</string>
     <string name="freqchan_entries_3" translatable="false">GHz</string>
     <string name="action_close">Close</string>
-    <string name="action_send_feedback">Send Feedback</string>
-    <string name="feedback_intro_text">Please describe the issue you are experiencing:</string>
     <string name="feedback_donation_success">Transaction was successful, thank you!</string>
     <string name="feedback_donation_cancelled">Transaction flow was cancelled, no money were transferred from your account</string>
 

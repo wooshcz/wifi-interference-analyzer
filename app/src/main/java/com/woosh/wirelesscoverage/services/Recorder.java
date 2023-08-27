@@ -1,6 +1,5 @@
 package com.woosh.wirelesscoverage.services;
 
-import android.content.Context;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 
@@ -8,27 +7,9 @@ import com.woosh.wirelesscoverage.helpers.Channel;
 import com.woosh.wirelesscoverage.utils.Constants;
 import com.woosh.wirelesscoverage.utils.WifiUtils;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 /**
  * Created by woosh on 31.7.16.
@@ -176,51 +157,51 @@ public class Recorder {
         return new float[]{tot, max, min};
     }
 
-    boolean saveCurrentResults(Context ctx) {
-        try {
-            String filename = "test.xml";
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.newDocument();
-            Element root = doc.createElement("RecorderData");
-            doc.appendChild(root);
-            Element details = doc.createElement("Channels");
-            root.appendChild(details);
-            for (int i = 0; i < list.size(); i++) {
-                Element chan = doc.createElement("Chan");
-                details.appendChild(chan);
-                chan.appendChild(doc.createTextNode(list.get(i).toString()));
-            }
-            Transformer transformer = TransformerFactory.newInstance().newTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            File file = ctx.getFilesDir();
-            StreamResult result = new StreamResult(new File(file + "/" + filename));
-            DOMSource source = new DOMSource(doc);
-            transformer.transform(source, result);
-            WifiUtils.addToDebugLog(file.toString() + "/" + filename);
-            return true;
-        } catch (ParserConfigurationException | TransformerException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    void loadResultsFromFile(Context ctx, String filename) {
-        try {
-            File source = new File(ctx.getFilesDir().getAbsolutePath() + "/" + filename);
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            dbf.setNamespaceAware(false);
-            dbf.setValidating(false);
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.parse(source);
-            NodeList nl = doc.getElementsByTagName("Chan");
-            for (int i = 0; i < nl.getLength(); i++) {
-                Node n = nl.item(i);
-                n.getTextContent();
-                WifiUtils.addToDebugLog(n.getTextContent());
-            }
-        } catch (ParserConfigurationException | SAXException | IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    boolean saveCurrentResults(Context ctx) {
+//        try {
+//            String filename = "test.xml";
+//            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+//            DocumentBuilder db = dbf.newDocumentBuilder();
+//            Document doc = db.newDocument();
+//            Element root = doc.createElement("RecorderData");
+//            doc.appendChild(root);
+//            Element details = doc.createElement("Channels");
+//            root.appendChild(details);
+//            for (int i = 0; i < list.size(); i++) {
+//                Element chan = doc.createElement("Chan");
+//                details.appendChild(chan);
+//                chan.appendChild(doc.createTextNode(list.get(i).toString()));
+//            }
+//            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+//            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+//            File file = ctx.getFilesDir();
+//            StreamResult result = new StreamResult(new File(file + "/" + filename));
+//            DOMSource source = new DOMSource(doc);
+//            transformer.transform(source, result);
+//            WifiUtils.addToDebugLog(file.toString() + "/" + filename);
+//            return true;
+//        } catch (ParserConfigurationException | TransformerException e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//    }
+//
+//    void loadResultsFromFile(Context ctx, String filename) {
+//        try {
+//            File source = new File(ctx.getFilesDir().getAbsolutePath() + "/" + filename);
+//            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+//            dbf.setNamespaceAware(false);
+//            dbf.setValidating(false);
+//            DocumentBuilder db = dbf.newDocumentBuilder();
+//            Document doc = db.parse(source);
+//            NodeList nl = doc.getElementsByTagName("Chan");
+//            for (int i = 0; i < nl.getLength(); i++) {
+//                Node n = nl.item(i);
+//                n.getTextContent();
+//                WifiUtils.addToDebugLog(n.getTextContent());
+//            }
+//        } catch (ParserConfigurationException | SAXException | IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

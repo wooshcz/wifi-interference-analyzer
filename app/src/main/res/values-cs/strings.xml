@@ -66,8 +66,6 @@
     <string name="nav_donate">Přispět</string>
     <string name="nav_others">Ostatní</string>
     <string name="action_close">Zavřít</string>
-    <string name="action_send_feedback">Odeslat zpětnou vazbu</string>
-    <string name="feedback_intro_text">Prosím popište problém, který pozorujete:</string>
     <string name="feedback_donation_success">Transakce byla odeslána úspěšně. Děkuji!</string>
     <string name="feedback_donation_cancelled">Transakce byla zrušena, žádné peníze nebyly odeslány z vašeho účtu</string>
 </resources>

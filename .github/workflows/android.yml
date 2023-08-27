@@ -25,3 +25,9 @@ jobs:
 
     - name: Build with Gradle
       run: ./gradlew build
+
+    - name: Upload lintReport
+      uses: actions/upload-artifact@v3
+      with:
+        name: lint-results-debug.html
+        path: ${{ github.workspace }}/**/reports/lint-results-debug.html
