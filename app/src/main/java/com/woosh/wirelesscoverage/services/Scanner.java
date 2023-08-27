@@ -12,6 +12,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -115,16 +116,16 @@ public class Scanner {
     }
 
     public void filterNetworks() {
-        int band = Integer.parseInt(Constants.PREFS.get(Constants.PREF_BAND));
+        int band = Integer.parseInt(Objects.requireNonNull(Constants.PREFS.get(Constants.PREF_BAND)));
         WifiUtils.addToDebugLog("filterNetworks is called: " + band);
         filteredNetworks.clear();
         if (band > 0) {
             int maxchan, minchan;
             if (band == 5) {
-                maxchan = Integer.parseInt(Constants.PREFS.get(Constants.PREF_MAX_CHANNEL_5G));
+                maxchan = Integer.parseInt(Objects.requireNonNull(Constants.PREFS.get(Constants.PREF_MAX_CHANNEL_5G)));
                 minchan = Constants.WIFI_5G_MINCHAN;
             } else {
-                maxchan = Integer.parseInt(Constants.PREFS.get(Constants.PREF_MAX_CHANNEL_2G));
+                maxchan = Integer.parseInt(Objects.requireNonNull(Constants.PREFS.get(Constants.PREF_MAX_CHANNEL_2G)));
                 minchan = Constants.WIFI_2G_MINCHAN;
             }
             for (WifiNetwork net : wifiNetworks) {
@@ -161,13 +162,5 @@ public class Scanner {
                 iterator.remove();
             }
         }
-    }
-
-    public List<WifiNetwork> getWifiNetworks() {
-        return wifiNetworks;
-    }
-
-    public List<WifiNetwork> getFilteredNetworks() {
-        return filteredNetworks;
     }
 }

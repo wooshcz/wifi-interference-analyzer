@@ -9,5 +9,10 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         android:icon="?attr/icon_settings"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_donate"
+        android:icon="?attr/icon_donate"
+        android:title="@string/nav_donate"
+        app:showAsAction="never" />
 </menu>

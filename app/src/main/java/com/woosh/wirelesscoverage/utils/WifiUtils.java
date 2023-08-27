@@ -82,31 +82,15 @@ public class WifiUtils {
     }
 
     public static List<String> parseCapabilities(String cap) {
-        int MAX = 3;
-        int GRP = 3;
+        addToDebugLog("Parsing WiFi network capabilities: " + cap);
         List<String> out = new ArrayList<>();
-        String[][] ret = new String[MAX][GRP];
         if (cap.contains("[") && cap.contains("]")) {
-            String regex = "\\[([a-zA-Z0-9]*)?[\\-]?([a-zA-Z0-9]*)?[\\-]?([a-zA-Z0-9+]*)?\\]";
+            String regex = "\\[([A-Z0-9-+/]+)]";
             Pattern p = Pattern.compile(regex);
             Matcher m = p.matcher(cap);
-            int i = 0;
-            while (m.find() && i < MAX) {
-                for (int j = 0; j < GRP; j++) {
-                    ret[i][j] = m.group(j + 1);
-                }
-                i++;
+            while (m.find()) {
+                out.add(m.group(1));
             }
-        }
-        for (String[] aRet : ret) {
-            StringBuilder txt = new StringBuilder();
-            for (int y = 0; y < aRet.length - 1; y++) {
-                if (aRet[y] != null && aRet[y].length() > 0) {
-                    if (y > 0) txt.append("-");
-                    txt.append(aRet[y]);
-                }
-            }
-            if (txt.length() > 0) out.add(txt.toString());
         }
         return out;
     }

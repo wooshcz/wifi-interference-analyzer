@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by woosh on 17.7.16.
@@ -89,11 +90,11 @@ public class SpectrumView extends View {
         graphWidth = viewWidth - axisgap;
 
         if (BAND_5GHZ.equals(band)) {
-            maxchan = Integer.parseInt(Constants.PREFS.get(Constants.PREF_MAX_CHANNEL_5G));
+            maxchan = Integer.parseInt(Objects.requireNonNull(Constants.PREFS.get(Constants.PREF_MAX_CHANNEL_5G)));
             minchan = Constants.WIFI_5G_MINCHAN;
             chanstep = 2;
         } else {
-            maxchan = Integer.parseInt(Constants.PREFS.get(Constants.PREF_MAX_CHANNEL_2G));
+            maxchan = Integer.parseInt(Objects.requireNonNull(Constants.PREFS.get(Constants.PREF_MAX_CHANNEL_2G)));
             minchan = Constants.WIFI_2G_MINCHAN;
             chanstep = 1;
         }
@@ -165,7 +166,7 @@ public class SpectrumView extends View {
                 for (BSSID bssid : network.getBSSIDList()) {
                     Map<String, Object> map = new HashMap<>();
                     int level = bssid.getLevel();
-                    if (level < treshold && Constants.PREFS.get(Constants.PREF_FILTER_SPEC).equals("true"))
+                    if (level < treshold && Objects.equals(Constants.PREFS.get(Constants.PREF_FILTER_SPEC), "true"))
                         break;
                     int freq = bssid.getFreq0();
                     int ch = bssid.getChan0();
@@ -295,10 +296,10 @@ public class SpectrumView extends View {
                     paintBars.setAlpha(0x50);
                 }
                 canvas.drawPath(
-                        (Path) canvasMap.get("bar"),
+                        (Path) Objects.requireNonNull(canvasMap.get("bar")),
                         paintBars);
                 canvas.drawText(
-                        (String) canvasMap.get("text"),
+                        (String) Objects.requireNonNull(canvasMap.get("text")),
                         axisgap + ((int) canvasMap.get("freq") - frstart) * fr2pix,
                         graphHeight - lev2pix * ((int) canvasMap.get("level") - minlev) - 20,
                         paintLabels

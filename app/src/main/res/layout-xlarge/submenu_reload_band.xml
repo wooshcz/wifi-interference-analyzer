@@ -2,7 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="800dp"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:gravity="fill_horizontal"
@@ -39,7 +39,7 @@
     <Button
         style="?android:attr/buttonStyle"
         android:text="@string/butt_clear"
-        android:layout_width="wrap_content"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:id="@+id/butt_clr" />

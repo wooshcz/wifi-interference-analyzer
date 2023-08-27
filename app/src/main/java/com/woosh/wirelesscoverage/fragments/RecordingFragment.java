@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatRatingBar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -31,6 +32,7 @@ import com.woosh.wirelesscoverage.utils.WifiUtils;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * Created by woosh on 17.7.16.
@@ -64,7 +66,7 @@ public class RecordingFragment extends Fragment {
         WifiUtils.addToDebugLog("recItem/recMax: " + recCurItem + "/" + recMaxItems);
         if (recCurItem < recMaxItems) {
             recCurItem++;
-            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
             recorder.addScan(MainActivity.wm.getScanResults());
@@ -92,62 +94,58 @@ public class RecordingFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(@NonNull View v, @Nullable Bundle savedInstanceState) {
         WifiUtils.addToDebugLog("RecordingFragment:onActivityCreated()");
         if (recorder == null || !recorder.getBand().equals(Constants.PREFS.get(Constants.PREF_BAND))) {
             recorder = new Recorder();
         }
-        recMaxItems = Integer.parseInt(Constants.PREFS.get(Constants.PREF_REC_SAMPLES));
+        recMaxItems = Integer.parseInt(Objects.requireNonNull(Constants.PREFS.get(Constants.PREF_REC_SAMPLES)));
         recCurItem = recorder.getScanCount();
-        final View v = getView();
-        if (v != null) {
-            listAdapter = new CustomListAdapter(getActivity());
-            ListView scoreList = v.findViewById(R.id.listView);
-            scoreList.setDividerHeight(0);
-            scoreList.setAdapter(listAdapter);
-            coordinatorLayout = v.findViewById(R.id.coord);
+        listAdapter = new CustomListAdapter(getActivity());
+        ListView scoreList = v.findViewById(R.id.listView);
+        scoreList.setDividerHeight(0);
+        scoreList.setAdapter(listAdapter);
+        coordinatorLayout = v.findViewById(R.id.coord);
 
-            bestChan = v.findViewById(R.id.bestchannel);
-            if (recCurItem > 0)
-                bestChan.setText(getResources().getQuantityString(R.plurals.frag_rec_best, recCurItem, recorder.getBestChannel().getChannelId(), recCurItem));
-            pbar = v.findViewById(R.id.progressBar);
-            pbar.setVisibility(View.INVISIBLE);
-            bRec = v.findViewById(R.id.butt_rec);
-            bRec.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-                if (!isChecked && MainActivity.REC_RUNNING) {
-                    MainActivity.setRecording(false);
-                    getView().setKeepScreenOn(false);
-                    pbar.setVisibility(View.INVISIBLE);
-                    Snackbar.make(coordinatorLayout, R.string.snack_rec_stopped, Snackbar.LENGTH_LONG).show();
-                } else if (!MainActivity.REC_RUNNING) {
-                    MainActivity.setRecording(true);
-                    getView().setKeepScreenOn(true);
-                    pbar.setVisibility(View.VISIBLE);
-                    Snackbar.make(coordinatorLayout, R.string.snack_rec_started, Snackbar.LENGTH_LONG).show();
-                }
-            });
-
-            ToggleButton bFilter = v.findViewById(R.id.butt_autofilter);
-            bFilter.setEnabled(false);
-            ToggleButton bAutoreload = v.findViewById(R.id.butt_autoreload);
-            bAutoreload.setEnabled(false);
-
-            bClr = v.findViewById(R.id.butt_clr);
-            bClr.setOnClickListener(view -> {
-                recorder = new Recorder();
-                recCurItem = recorder.getScanCount();
-                listAdapter.notifyDataSetChanged();
-                bestChan.setText(null);
-                Snackbar.make(coordinatorLayout, R.string.snack_clear_results, Snackbar.LENGTH_LONG).show();
-            });
-
-            if (MainActivity.REC_RUNNING) {
-                pbar.setVisibility(View.VISIBLE);
-                bRec.setChecked(true);
-                bClr.setEnabled(false);
+        bestChan = v.findViewById(R.id.bestchannel);
+        if (recCurItem > 0)
+            bestChan.setText(getResources().getQuantityString(R.plurals.frag_rec_best, recCurItem, recorder.getBestChannel().getChannelId(), recCurItem));
+        pbar = v.findViewById(R.id.progressBar);
+        pbar.setVisibility(View.INVISIBLE);
+        bRec = v.findViewById(R.id.butt_rec);
+        bRec.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+            if (!isChecked && MainActivity.REC_RUNNING) {
+                MainActivity.setRecording(false);
+                v.setKeepScreenOn(false);
+                pbar.setVisibility(View.INVISIBLE);
+                Snackbar.make(coordinatorLayout, R.string.snack_rec_stopped, Snackbar.LENGTH_LONG).show();
+            } else if (!MainActivity.REC_RUNNING) {
+                MainActivity.setRecording(true);
                 v.setKeepScreenOn(true);
+                pbar.setVisibility(View.VISIBLE);
+                Snackbar.make(coordinatorLayout, R.string.snack_rec_started, Snackbar.LENGTH_LONG).show();
             }
+        });
+
+        ToggleButton bFilter = v.findViewById(R.id.butt_autofilter);
+        bFilter.setEnabled(false);
+        ToggleButton bAutoreload = v.findViewById(R.id.butt_autoreload);
+        bAutoreload.setEnabled(false);
+
+        bClr = v.findViewById(R.id.butt_clr);
+        bClr.setOnClickListener(view -> {
+            recorder = new Recorder();
+            recCurItem = recorder.getScanCount();
+            listAdapter.notifyDataSetChanged();
+            bestChan.setText(null);
+            Snackbar.make(coordinatorLayout, R.string.snack_clear_results, Snackbar.LENGTH_LONG).show();
+        });
+
+        if (MainActivity.REC_RUNNING) {
+            pbar.setVisibility(View.VISIBLE);
+            bRec.setChecked(true);
+            bClr.setEnabled(false);
+            v.setKeepScreenOn(true);
         }
     }
 

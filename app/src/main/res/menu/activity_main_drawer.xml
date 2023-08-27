@@ -27,10 +27,6 @@
                 android:id="@+id/nav_about"
                 android:icon="?attr/icon_info"
                 android:title="@string/nav_about" />
-            <item
-                android:id="@+id/nav_donate"
-                android:icon="?attr/icon_donate"
-                android:title="@string/nav_donate" />
         </menu>
 
     </item>

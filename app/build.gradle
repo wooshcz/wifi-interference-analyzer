@@ -9,8 +9,8 @@ android {
         applicationId "com.woosh.wirelesscoverage"
         minSdkVersion 24
         targetSdkVersion 33
-        versionCode 27
-        versionName "1.7.3"
+        versionCode 28
+        versionName "1.8.0"
         buildConfigField("long", "VERSION_CODE", "${defaultConfig.versionCode}")
         buildConfigField("String", "VERSION_NAME", "\"${defaultConfig.versionName}\"")
     }
@@ -46,6 +46,6 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.drawerlayout:drawerlayout:1.2.0'
 
-    def billing_version = "5.1.0"
+    def billing_version = "6.0.1"
     implementation "com.android.billingclient:billing:$billing_version"
 }

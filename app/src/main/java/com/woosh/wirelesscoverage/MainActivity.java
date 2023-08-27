@@ -51,6 +51,7 @@ import com.woosh.wirelesscoverage.utils.Constants;
 import com.woosh.wirelesscoverage.utils.WifiUtils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -67,13 +68,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static boolean REC_RUNNING = false;
     public static boolean MANUAL_SCAN;
     public static boolean receiverRegistered = false;
+    public static boolean showDonateButton = true;
     private static long DELAY;
     private static long DELAY_REC;
     private static Timer timer;
     private final AcknowledgePurchaseResponseListener acknowledgePurchaseResponseListener = billingResult -> WifiUtils.addToDebugLog("billingFlow onAcknowledgePurchaseResponse: " + billingResult);
     private final SharedPreferences.OnSharedPreferenceChangeListener spChanged = (sharedPreferences, key) -> {
         Map<String, ?> all = sharedPreferences.getAll();
-        String val = all.get(key).toString();
+        String val = Objects.requireNonNull(all.get(key)).toString();
         if (val.length() > 0) {
             Constants.PREFS.put(key, val);
         }
@@ -116,12 +118,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
                         Toast.makeText(getApplicationContext(), R.string.feedback_donation_success, Toast.LENGTH_LONG).show();
                         if (!purchase.isAcknowledged()) {
-                            AcknowledgePurchaseParams acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder()
-                                    .setPurchaseToken(purchase.getPurchaseToken())
-                                    .build();
+                            AcknowledgePurchaseParams acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder().setPurchaseToken(purchase.getPurchaseToken()).build();
                             billingClient.acknowledgePurchase(acknowledgePurchaseParams, acknowledgePurchaseResponseListener);
                         }
-                        View donateButton = findViewById(R.id.nav_donate);
+                        View donateButton = findViewById(R.id.action_donate);
                         donateButton.setVisibility(View.INVISIBLE);
                     }
                 }
@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             String key = Constants.PREF_STRING_KEYS[i];
             String val;
             if (prefs.get(key) != null) {
-                val = prefs.get(key).toString();
+                val = Objects.requireNonNull(prefs.get(key)).toString();
             } else {
                 val = getString(Constants.PREF_STRING_DEFS[i]);
             }
@@ -207,10 +207,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         for (int i = 0; i < Constants.PREF_SET_KEYS.length; i++) {
             String key = Constants.PREF_SET_KEYS[i];
-            Set<String> val = (Set<String>) prefs.get(key);
-            if (val != null && key.equals(Constants.PREF_LIST_HOME)) {
+            Set<String> val = sp.getStringSet(key, new HashSet<>());
+            if (key.equals(Constants.PREF_LIST_HOME)) {
                 Scanner.setHomeNetworksSet(val);
-            } else if (val != null && key.equals(Constants.PREF_LIST_IGNORE)) {
+            } else if (key.equals(Constants.PREF_LIST_IGNORE)) {
                 Scanner.setIgnoredNetworksSet(val);
             }
             WifiUtils.addToDebugLog("pref " + key + ": " + val);
@@ -283,10 +283,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (savedInstanceState == null) {
             ScanFragment fragment = new ScanFragment();
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.root_frame, fragment, "scan")
-                    .commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.root_frame, fragment, "scan").commit();
             navigationView.setCheckedItem(R.id.nav_scan);
 
             wm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -300,16 +297,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
 
-        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                || checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                || checkSelfPermission(Manifest.permission.CHANGE_WIFI_STATE) != PackageManager.PERMISSION_GRANTED
-                || checkSelfPermission(Manifest.permission.ACCESS_WIFI_STATE) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.CHANGE_WIFI_STATE,
-                    Manifest.permission.ACCESS_WIFI_STATE
-            }, 0x1000);
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED || checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED || checkSelfPermission(Manifest.permission.CHANGE_WIFI_STATE) != PackageManager.PERMISSION_GRANTED || checkSelfPermission(Manifest.permission.ACCESS_WIFI_STATE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.CHANGE_WIFI_STATE, Manifest.permission.ACCESS_WIFI_STATE}, 0x1000);
         } else {
             registerReceiver(scanReady, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
             receiverRegistered = true;
@@ -318,37 +307,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (sw == null) sw = new Scanner();
         sp.registerOnSharedPreferenceChangeListener(spChanged);
 
-        billingClient = BillingClient.newBuilder(this)
-                .setListener(purchasesUpdatedListener)
-                .enablePendingPurchases()
-                .build();
+        billingClient = BillingClient.newBuilder(this).setListener(purchasesUpdatedListener).enablePendingPurchases().build();
         billingClient.startConnection(new BillingClientStateListener() {
             @Override
             public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
-                View donateButton = findViewById(R.id.nav_donate);
+
                 WifiUtils.addToDebugLog("billingResult response code: " + billingResult.getResponseCode() + " | " + billingResult.getDebugMessage());
                 if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                     // The BillingClient is ready. You can query purchases here
-                    billingClient.queryPurchasesAsync(
-                            QueryPurchasesParams.newBuilder()
-                                    .setProductType(BillingClient.ProductType.INAPP)
-                                    .build(), (billingResult1, list) -> {
-                                WifiUtils.addToDebugLog("billingResult purchase list fetched: " + list);
-                                if (list.size() > 0 && list.get(0).getProducts().get(0).equals(Constants.SKU_DONATE)) {
-                                    // let's hide the donate button since the user already purchased the SKU_DONATE
-                                    donateButton.setVisibility(View.INVISIBLE);
-                                }
+                    billingClient.queryPurchasesAsync(QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.INAPP).build(), (billingResult1, list) -> {
+                        WifiUtils.addToDebugLog("billingResult purchase list fetched: " + list);
+                        if (list.size() > 0) {
+                            Purchase purchase = list.get(0);
+                            WifiUtils.addToDebugLog("billingResult productId from the purchase list: " + purchase.getProducts().get(0));
+                            if (Constants.SKU_DONATE.equals(purchase.getProducts().get(0))) {
+                                // let's hide the donate button since the user already purchased the SKU_DONATE
+                                showDonateButton = false;
                             }
-                    );
+                        }
+                    });
                     List<QueryProductDetailsParams.Product> productList = new ArrayList<>();
-                    productList.add(QueryProductDetailsParams.Product.newBuilder()
-                            .setProductId(Constants.SKU_DONATE)
-                            .setProductType(BillingClient.ProductType.INAPP)
-                            .build());
-                    QueryProductDetailsParams queryProductDetailsParams =
-                            QueryProductDetailsParams.newBuilder()
-                                    .setProductList(productList)
-                                    .build();
+                    productList.add(QueryProductDetailsParams.Product.newBuilder().setProductId(Constants.SKU_DONATE).setProductType(BillingClient.ProductType.INAPP).build());
+                    QueryProductDetailsParams queryProductDetailsParams = QueryProductDetailsParams.newBuilder().setProductList(productList).build();
                     billingClient.queryProductDetailsAsync(queryProductDetailsParams, (billingResult12, list) -> {
                         WifiUtils.addToDebugLog("billingResult queryProductDetailsAsync ResponseCode: " + billingResult12.getResponseCode());
                         WifiUtils.addToDebugLog("billingResult queryProductDetailsAsync DebugMessage: " + billingResult12.getDebugMessage());
@@ -358,12 +338,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 productDetails = details;
                         }
                         if (productDetails == null) {
-                            WifiUtils.addToDebugLog("billingResult queryProductDetailsAsync product details are empty");
-                            donateButton.setVisibility(View.INVISIBLE);
+                            WifiUtils.addToDebugLog("billingResult setting showDonateButton=false");
+                            showDonateButton = false;
                         }
                     });
                 } else {
-                    donateButton.setVisibility(View.INVISIBLE);
+                    showDonateButton = false;
                 }
             }
 
@@ -385,7 +365,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (res == PackageManager.PERMISSION_GRANTED) {
             registerReceiver(scanReady, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
             receiverRegistered = true;
-            wm.startScan();
+            if (null != wm) {
+                wm.startScan();
+            }
         } else {
             receiverRegistered = false;
         }
@@ -435,13 +417,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        MenuItem donateMenuItem = menu.findItem(R.id.action_donate);
+        WifiUtils.addToDebugLog("showDonateButton: " + showDonateButton);
+        if (!showDonateButton) donateMenuItem.setVisible(false);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
+        } else if (id == R.id.action_donate) {
+            if (productDetails != null) {
+                ArrayList<BillingFlowParams.ProductDetailsParams> productDetailsParamsList = new ArrayList<>();
+                productDetailsParamsList.add(BillingFlowParams.ProductDetailsParams.newBuilder().setProductDetails(productDetails).build());
+                BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder().setProductDetailsParamsList(productDetailsParamsList).build();
+                int responseCode = billingClient.launchBillingFlow(this, billingFlowParams).getResponseCode();
+                if (responseCode == BillingClient.BillingResponseCode.OK) {
+                    WifiUtils.addToDebugLog("billingFlow launchBillingFlow: BillingClient.BillingResponseCode.OK");
+                } else {
+                    WifiUtils.addToDebugLog(String.format(Locale.getDefault(), "billingFlow launchBillingFlow: %d", responseCode));
+                }
+            }
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -468,39 +470,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             builder.setMessage(String.format(Locale.getDefault(), getString(R.string.app_about), versionCode, versionName));
             builder.setPositiveButton(R.string.action_close, (dialog, which) -> dialog.cancel());
             builder.show();
-        } else if (id == R.id.nav_donate) {
-            if (productDetails != null) {
-                ArrayList<BillingFlowParams.ProductDetailsParams> productDetailsParamsList = new ArrayList<>();
-                productDetailsParamsList.add(BillingFlowParams.ProductDetailsParams.newBuilder()
-                        .setProductDetails(productDetails)
-                        .build());
-
-                BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
-                        .setProductDetailsParamsList(productDetailsParamsList)
-                        .build();
-                int responseCode = billingClient.launchBillingFlow(this, billingFlowParams).getResponseCode();
-                if (responseCode == BillingClient.BillingResponseCode.OK) {
-                    WifiUtils.addToDebugLog("billingFlow launchBillingFlow: BillingClient.BillingResponseCode.OK");
-                } else {
-                    WifiUtils.addToDebugLog(String.format(Locale.getDefault(), "billingFlow launchBillingFlow: %d", responseCode));
-                }
-            }
         }
         if (fr != null) {
             FragmentManager fm = getSupportFragmentManager();
             Fragment currentFragment = fm.findFragmentById(R.id.root_frame);
-            if (!currentFragment.getTag().equals(tag)) {
-                WifiUtils.addToDebugLog(String.format(Locale.getDefault(), "%d", fm.getBackStackEntryCount()));
-                FragmentTransaction fmtrans = fm.beginTransaction();
-                fmtrans.replace(R.id.root_frame, fr, tag);
-                if (fm.getBackStackEntryCount() > 0) {
-                    if (!fm.getBackStackEntryAt(fm.getBackStackEntryCount() - 1).getName().equals(tag))
+            if (null != currentFragment && null != currentFragment.getTag()) {
+                if (!currentFragment.getTag().equals(tag)) {
+                    WifiUtils.addToDebugLog(String.format(Locale.getDefault(), "%d", fm.getBackStackEntryCount()));
+                    FragmentTransaction fmtrans = fm.beginTransaction();
+                    fmtrans.replace(R.id.root_frame, fr, tag);
+                    if (fm.getBackStackEntryCount() > 0) {
+                        if (!Objects.equals(fm.getBackStackEntryAt(fm.getBackStackEntryCount() - 1).getName(), tag))
+                            fmtrans.addToBackStack(tag);
+                    } else {
                         fmtrans.addToBackStack(tag);
-                } else {
-                    fmtrans.addToBackStack(tag);
+                    }
+                    fmtrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                    fmtrans.commit();
                 }
-                fmtrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                fmtrans.commit();
             }
         }
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

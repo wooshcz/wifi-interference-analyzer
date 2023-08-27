@@ -67,7 +67,6 @@
         <EditTextPreference
             android:key="rec_samples"
             android:inputType="number"
-            android:numeric="integer"
             android:defaultValue="@string/pref_rec_samples_def"
             android:summary="@string/pref_rec_samples_desc"
             android:title="@string/pref_rec_samples_title">

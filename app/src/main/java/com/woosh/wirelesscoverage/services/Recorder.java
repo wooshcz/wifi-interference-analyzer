@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -37,20 +38,20 @@ import javax.xml.transform.stream.StreamResult;
 public class Recorder {
 
     final String band;
-    private int scancount;
     private final ArrayList<Channel> list = new ArrayList<>();
     private final int maxchan;
     private final int minchan;
+    private int scancount;
 
     public Recorder() {
         this.band = Constants.PREFS.getOrDefault(Constants.PREF_BAND, Constants.BAND_2GHZ);
         int chanstep;
-        if (band.equals(Constants.BAND_5GHZ)) {
-            this.maxchan = Integer.parseInt(Constants.PREFS.get(Constants.PREF_MAX_CHANNEL_5G));
+        if (Constants.BAND_5GHZ.equals(this.band)) {
+            this.maxchan = Integer.parseInt(Objects.requireNonNull(Constants.PREFS.get(Constants.PREF_MAX_CHANNEL_5G)));
             this.minchan = Constants.WIFI_5G_MINCHAN;
             chanstep = 2;
         } else {
-            this.maxchan = Integer.parseInt(Constants.PREFS.get(Constants.PREF_MAX_CHANNEL_2G));
+            this.maxchan = Integer.parseInt(Objects.requireNonNull(Constants.PREFS.get(Constants.PREF_MAX_CHANNEL_2G)));
             this.minchan = Constants.WIFI_2G_MINCHAN;
             chanstep = 1;
         }

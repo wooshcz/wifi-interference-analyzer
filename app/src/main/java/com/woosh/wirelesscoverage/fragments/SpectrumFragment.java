@@ -61,11 +61,11 @@ public class SpectrumFragment extends Fragment {
         int currentOrientation = getResources().getConfiguration().orientation;
         if (currentOrientation == Configuration.ORIENTATION_PORTRAIT) {
             ToggleButton bFilter = view.findViewById(R.id.butt_autofilter);
-            if (Constants.PREFS.get(Constants.PREF_FILTER_SPEC).equals("true")) {
+            if ("true".equals(Constants.PREFS.get(Constants.PREF_FILTER_SPEC))) {
                 bFilter.setChecked(true);
             }
             bFilter.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-                SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(requireActivity());
                 SharedPreferences.Editor edit = sp.edit();
                 edit.putBoolean(Constants.PREF_FILTER_SPEC, isChecked);
                 edit.apply();
@@ -85,10 +85,10 @@ public class SpectrumFragment extends Fragment {
             bAutoreload.setOnCheckedChangeListener((compoundButton, isChecked) -> {
                 if (!isChecked) {
                     MainActivity.setAutoreload(false);
-                    getView().setKeepScreenOn(false);
+                    view.setKeepScreenOn(false);
                 } else if (!MainActivity.RELOAD_RUNNING) {
                     MainActivity.setAutoreload(true);
-                    getView().setKeepScreenOn(true);
+                    view.setKeepScreenOn(true);
                     Snackbar.make(coordinatorLayout, R.string.snack_autoreload_started, Snackbar.LENGTH_LONG).show();
                 }
             });

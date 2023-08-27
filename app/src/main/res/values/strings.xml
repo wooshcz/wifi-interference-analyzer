@@ -56,7 +56,7 @@
     <string name="frag_scan_ssid" translatable="false">%s</string>
     <string name="frag_scan_count">AP Count: %d</string>
     <string name="frag_scan_bssid" translatable="false">%s</string>
-    <string name="frag_scan_chanfr" translatable="false">Ch %1$d\n%2$d@%3$d MHz</string>
+    <string name="frag_scan_chanfr" translatable="false">Channel %1$d\n%2$d@%3$d MHz</string>
     <string name="frag_scan_chanfr_long" translatable="false">Ch %1$d\n%2$d@%3$d MHz\n%4$d@%5$d MHz</string>
     <string name="frag_scan_strength" translatable="false">%d dBm</string>
     <string name="frag_scan_apcapab">Capabilities</string>

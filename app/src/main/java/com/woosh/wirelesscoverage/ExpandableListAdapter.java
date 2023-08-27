@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -97,7 +96,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             holder.capab.setText(captext.toString());
             boolean isIgnored = Scanner.getIgnoredNetworksSet().contains(bssid.getBSSID());
             boolean isHome = Scanner.getHomeNetworksSet().contains(bssid.getBSSID());
-            boolean isOld = (System.currentTimeMillis() / 1000.0 - bssid.getSeenAt()) > 1;
+            boolean isOld = (System.currentTimeMillis() / 1000.0 - bssid.getSeenAt()) > 30;
             if (isIgnored)
                 holder.flag.setBackgroundColor(ContextCompat.getColor(context, R.color.colorIgnore));
             else if (isHome)
@@ -133,11 +132,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
 
         ViewHolderGroup holder;
-
         if (convertView == null) {
             convertView = layoutInflater.inflate(R.layout.list_scan_main_row, parent, false);
             holder = new ViewHolderGroup();
-            //holder.flag = (LinearLayout) convertView.findViewById(R.id.flag);
             holder.ssid = convertView.findViewById(R.id.ap_ssid);
             holder.count = convertView.findViewById(R.id.ap_count);
             convertView.setTag(holder);
@@ -149,17 +146,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             WifiNetwork network = MainActivity.sw.getNetworkGroup(groupPosition);
             String name = network.getSSID();
             holder.ssid.setText(String.format(Locale.getDefault(), context.getString(R.string.frag_scan_ssid), name));
-            ExpandableListView listview = (ExpandableListView) parent;
-            if (network.getBSSIDList().size() > 1) {
-                holder.count.setVisibility(View.VISIBLE);
-                holder.count.setText(String.format(Locale.getDefault(), context.getString(R.string.frag_scan_count), network.getBSSIDList().size()));
-            } else {
-                holder.count.setVisibility(View.GONE);
-                listview.expandGroup(groupPosition);
-            }
+            holder.count.setText(String.format(Locale.getDefault(), context.getString(R.string.frag_scan_count), network.getBSSIDList().size()));
         }
         return convertView;
-
     }
 
     @Override
