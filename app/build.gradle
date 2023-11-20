@@ -3,14 +3,14 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
     }
-    compileSdkVersion 33
+    compileSdkVersion 34
     buildToolsVersion '34.0.0'
     defaultConfig {
         applicationId "com.woosh.wirelesscoverage"
         minSdkVersion 24
-        targetSdkVersion 33
-        versionCode 28
-        versionName "1.8.0"
+        targetSdkVersion 34
+        versionCode 29
+        versionName "1.8.1"
         buildConfigField("long", "VERSION_CODE", "${defaultConfig.versionCode}")
         buildConfigField("String", "VERSION_NAME", "\"${defaultConfig.versionName}\"")
     }

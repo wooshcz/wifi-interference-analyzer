@@ -1,5 +1,7 @@
 package com.woosh.wirelesscoverage;
 
+import static android.view.View.TEXT_ALIGNMENT_CENTER;
+
 import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -9,12 +11,14 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.text.util.Linkify;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -465,8 +469,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_about) {
             String versionName = BuildConfig.VERSION_NAME;
             long versionCode = BuildConfig.VERSION_CODE;
+            TextView textView = new TextView(getApplicationContext());
+            textView.setAutoLinkMask(Linkify.WEB_URLS);
+            textView.setText(R.string.app_privacy_policy);
+            textView.setTextAlignment(TEXT_ALIGNMENT_CENTER);
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
             builder.setTitle(R.string.app_name);
+            builder.setView(textView);
             builder.setMessage(String.format(Locale.getDefault(), getString(R.string.app_about), versionCode, versionName));
             builder.setPositiveButton(R.string.action_close, (dialog, which) -> dialog.cancel());
             builder.show();

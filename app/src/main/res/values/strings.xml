@@ -95,5 +95,6 @@
     <string name="action_close">Close</string>
     <string name="feedback_donation_success">Transaction was successful, thank you!</string>
     <string name="feedback_donation_cancelled">Transaction flow was cancelled, no money were transferred from your account</string>
+    <string name="app_privacy_policy" translatable="false">Privacy Policy: https://moravek.me/android/wifi-interference-analyzer/#privacy-policy</string>
 
 </resources>
